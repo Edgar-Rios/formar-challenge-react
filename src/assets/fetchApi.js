@@ -8,11 +8,24 @@ export async function fetchApi(params, query = "") {
 
     if (results.length > 500) return { data: results }
 
-    const promises = results.map(async pokemon => {
+    // console.log(response)
+
+    const response = await extractPokeData(results);
+    // console.log(response)
+    // console.log(results.results)
+    return {
+        nextPage: next,
+        data: response,
+    };
+}
+
+export async function extractPokeData(data) {
+    const promises = data.map(async pokemon => {
         const res = await fetch(pokemon.url);
         const data = await res.json();
 
         return {
+            id: `${data.order}-${data.name}`,
             order: +(data.order),
             name: data.name,
             image: data.sprites.other["official-artwork"].front_default,
@@ -21,13 +34,6 @@ export async function fetchApi(params, query = "") {
         }
     });
 
-    const response = await Promise.all(promises);
-    // console.log(response)
+    return await Promise.all(promises);
 
-    // console.log(response)
-    // console.log(results.results)
-    return {
-        nextPage: next,
-        data: response,
-    };
 }

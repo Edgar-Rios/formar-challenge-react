@@ -2,17 +2,20 @@ import React, { useEffect, useState } from 'react'
 
 import { PokemonContext } from './PokemonContext';
 
-import { fetchApi } from '../assets/fetchApi';
+import { extractPokeData, fetchApi } from '../assets/fetchApi';
 
 const PokemonProvider = ({ children }) => {
 
     const [pokemones, setPokemones] = useState([]);
     const [allPokemones, setAllPokemones] = useState([]);
     const [filteredPokemones, setFilteredPokemones] = useState([]);
-    const [allMoves, SetAllMoves] = useState([])
+    const [allMoves, SetAllMoves] = useState([]);
     const [nextPage, setNextPage] = useState("");
+    const [searchText, setSearchText] = useState("");
+    const [typeFilter, setTypeFilter] = useState("");
 
-    const pokemonsOnView = filteredPokemones !== [] ? pokemones : filteredPokemones;
+
+    let pokemonsOnView = filteredPokemones.length === 0 ? pokemones : filteredPokemones;
 
     const getPokemones = async () => {
 
@@ -46,12 +49,39 @@ const PokemonProvider = ({ children }) => {
     }
 
     const dropPokemonById = async (id) => {
-        setPokemones([...pokemones.filter(pokemon => pokemon.order !== id)])
+        if (filteredPokemones.length > 0) {
+            setFilteredPokemones([...filteredPokemones.filter(pokemon => pokemon.id !== id)])
+        } else {
+            setPokemones([...pokemones.filter(pokemon => pokemon.id !== id)])
+        }
     }
 
 
-    const filter = async () => {
-        filteredPokemones.filter()
+    const filter = async ({ target }) => {
+
+        setTimeout(() => {
+
+
+        }, 1000);
+        setSearchText(target.value);
+        // console.log(searchText)
+        let listFiltered = []
+        console.log(target.value)
+        let filtered = allPokemones.filter(pokemon => pokemon.name.includes(searchText));
+
+        if (filtered.length > 0) {
+            let pokeData = await extractPokeData(filtered);
+            // console.log(pokeData)
+            listFiltered = pokeData;
+        }
+
+        setFilteredPokemones(listFiltered);
+    }
+
+    const changeTypeFilter = async ({ target }) => {
+        setSearchText("");
+        setTypeFilter(target.value);
+        setFilteredPokemones([]);
     }
 
     useEffect(() => {
@@ -68,6 +98,7 @@ const PokemonProvider = ({ children }) => {
         getAllMovesPokemon();
     }, [])
 
+
     return (
         <PokemonContext.Provider value={
             {
@@ -76,8 +107,12 @@ const PokemonProvider = ({ children }) => {
                 allMoves,
                 nextPage,
                 pokemonsOnView,
+                searchText,
+                filteredPokemones,
+                filter,
                 dropPokemonById,
                 seeMorePokemones,
+                changeTypeFilter,
             }
         }>
             {children}

@@ -1,26 +1,20 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { PokemonContext } from '../../context/PokemonContext';
 
 function Filter() {
 
-  const { filter } = useContext(PokemonContext);
-
-  const [inputText, setInputText] = useState("");
-
-  function search() {
-
-  }
+  const { filter, changeTypeFilter, searchText } = useContext(PokemonContext);
 
   return (
     <form>
-      <input type="text" name="input-text" id='input-text' onChange={() => search()} />
+      <input type="text" name="input-text" id='input-text' onChange={filter} value={searchText} />
       <fieldset>
         <legend>filtrar</legend>
         <div>
-          <label  >Nombre</label>
-          <input type="radio" id="name" name="typeFilter" />
-          <label  >Habilidad</label>
-          <input type="radio" id="skill" name="typeFilter" />
+          <label >Nombre</label>
+          <input type="radio" name="typeFilter" value="name" onChange={changeTypeFilter} defaultChecked />
+          <label >Habilidad</label>
+          <input type="radio" name="typeFilter" value="skill" onChange={changeTypeFilter} />
         </div>
       </fieldset>
     </form>

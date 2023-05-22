@@ -6,17 +6,27 @@ import Card from '../Card';
 
 function Gallery() {
 
-    const { pokemones, dropPokemonById, nextPage, seeMorePokemones } = useContext(PokemonContext)
-    // console.log('en galeria')
-    console.log(pokemones)
+    const { pokemonsOnView, dropPokemonById, nextPage, seeMorePokemones } = useContext(PokemonContext)
+
+    const listCard = (list) => {
+        return list.map(({ id, order, abilities, name, image, weight }) => (
+            <Card key={`${order}-${name}`} id={id} handleClick={() => dropPokemonById(`${order}-${name}`)} abilities={abilities} name={name} image={image} weight={weight} order={order} />
+        ))
+    }
+
+    console.log('pokemonsOnView')
+    console.log(pokemonsOnView)
+
     return (
         <>
             {/* <h1>Pokemones</h1> */}
             <div className='gallery'>
-                {pokemones.map(({ order, abilities, name, image, weight }) => (
-                    <Card key={order} handleClick={() => dropPokemonById(order)} abilities={abilities} name={name} image={image} weight={weight} order={order} />
-                ))}
-                {nextPage && <div><button onClick={() => seeMorePokemones(nextPage)}>see more</button></div>}
+
+                {
+                    listCard(pokemonsOnView)
+                }
+                {nextPage ? <div><button onClick={() => seeMorePokemones(nextPage)}>see more</button></div> : ""}
+
             </div>
         </>
     )
