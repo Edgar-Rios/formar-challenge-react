@@ -1,3 +1,8 @@
+@font-face {
+  font-family: pokefont;
+  src: local(pokefont), url('./fonts/Pokemon\ Solid.ttf');
+}
+
 * {
   box-sizing: border-box;
   margin: 0;

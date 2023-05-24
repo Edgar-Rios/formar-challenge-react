@@ -6,7 +6,7 @@ import './header.css';
 function Header() {
     return (
         <header className="App-header">
-            <h1>PokeApi</h1>
+            <h1>Pokedex</h1>
             <Filter />
         </header>
 
