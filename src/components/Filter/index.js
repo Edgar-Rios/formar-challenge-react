@@ -1,13 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import { PokemonContext } from '../../context/PokemonContext';
 
 function Filter() {
 
-  const { filter, changeTypeFilter, searchText } = useContext(PokemonContext);
+  const { filterPokemons, changeTypeFilter, handlerSearcher, searchText } = useContext(PokemonContext);
 
   return (
     <form>
-      <input type="text" name="input-text" id='input-text' onChange={filter} value={searchText} />
+      <input type="text" name="input-text" onChange={handlerSearcher} value={searchText} />
       <fieldset>
         <legend>filtrar</legend>
         <div>

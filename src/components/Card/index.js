@@ -1,16 +1,15 @@
 import React from 'react'
 
 import './card.css';
-function Card({ image, name, weight, abilities, handleClick, order }) {
+function Card({ image, name, weight, abilities, handleClick, id }) {
 
-    // console.log(abilities.slice(0, 4))
     return (
         <article className='card-pokemon'>
             <div className='content-image'>
                 <img src={image} alt={`image of ${name}`} />
             </div>
             <section>
-                <h2 className='name-pokemon'>{`#${order} ${name}`}</h2>
+                <h2 className='name-pokemon'>{`#${id} ${name}`}</h2>
                 <div className='info'>
                     <fieldset>
                         <legend>atributes</legend>
@@ -23,12 +22,12 @@ function Card({ image, name, weight, abilities, handleClick, order }) {
 
                     <fieldset>
                         <legend>abilities</legend>
-                        {abilities.slice(0, 4).map(({ move }, index) => <span key={index}>{(move.name).split('-').join(' ')}</span>)}
+                        {/* {abilities.slice(0, 4).map(({ move }, index) => <span key={index}>{(move.name).split('-').join(' ')}</span>)} */}
                     </fieldset>
 
                 </div>
             </section>
-            <span className='button-drop' onClick={() => handleClick(order)}>X</span>
+            <span className='button-drop' onClick={() => handleClick(id)}>X</span>
         </article>
     )
 }

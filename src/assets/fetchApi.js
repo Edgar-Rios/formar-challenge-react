@@ -1,32 +1,37 @@
+import axios from 'axios'
+const baseURL = "https://pokeapi.co/api/v2/";
 
-const baseUrl = "https://pokeapi.co/api/v2/";
+export const getAllPokemones = async () => {
 
-export async function fetchApi(params, query = "") {
-    let data = await fetch(`${baseUrl}${params}${query !== "" ? `${query}` : ""}`);
+    const { data: firstHalfData } = await axios.get(
+        `${baseURL}pokemon?limit=500&offset=0`
+    );
 
-    let { next, results } = await data.json();
+    const { data: secondHalfData } = await axios.get(
+        `${baseURL}pokemon?limit=1000&offset=500`
+    );
 
-    if (results.length > 500) return { data: results }
+    const firstPromises = firstHalfData.results.map(async pokemon => {
+        const { data } = await axios.get(pokemon.url);
+        return data;
+    });
+    const firstResults = await Promise.all(firstPromises);
 
-    // console.log(response)
+    const secondPromises = secondHalfData.results.map(async pokemon => {
+        const { data } = await axios.get(pokemon.url);            // const data = await res.json();
+        return data;
+    });
+    const secondResults = await Promise.all(secondPromises);
 
-    const response = await extractPokeData(results);
-    // console.log(response)
-    // console.log(results.results)
-    return {
-        nextPage: next,
-        data: response,
-    };
+    return [...firstResults, ...secondResults];
 }
 
-export async function extractPokeData(data) {
+async function extractPokeData(data) {
     const promises = data.map(async pokemon => {
-        const res = await fetch(pokemon.url);
-        const data = await res.json();
+        const data = await axios.get(pokemon.url);
 
         return {
-            id: `${data.order}-${data.name}`,
-            order: +(data.order),
+            id: data.id,
             name: data.name,
             image: data.sprites.other["official-artwork"].front_default,
             weight: data.weight,

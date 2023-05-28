@@ -6,30 +6,39 @@ import Card from '../Card';
 
 function Gallery() {
 
-    const { pokemonsOnView, dropPokemonById, nextPage, seeMorePokemones } = useContext(PokemonContext)
+    const { listToRender, dropPokemonById } = useContext(PokemonContext);
 
-    const listCard = (list) => {
-        return list.map(({ id, order, abilities, name, image, weight }) => (
-            <Card key={`${order}-${name}`} id={id} handleClick={() => dropPokemonById(`${order}-${name}`)} abilities={abilities} name={name} image={image} weight={weight} order={order} />
-        ))
-    }
+    // console.log('from GALLERY')
+    // console.log(listToRender)
+    const listCard = list =>
+        list.map((pokemon) => {
 
-    console.log('pokemonsOnView')
-    console.log(pokemonsOnView)
+            let pokedata = {
+                key: `${pokemon.id}-${pokemon.order}`,
+                name: pokemon.name,
+                id: pokemon.id,
+                image: pokemon.sprites.other['official-artwork'].front_default,
+                abilities: pokemon.moves,
+                weight: pokemon.weight,
+            }
+            console.log(pokedata)
+
+            return (
+                <Card key={pokedata.key} id={pokedata.id} handleClick={() => dropPokemonById(pokedata.id)} abilities={pokedata.abilities} name={pokedata.name} image={pokedata.image} weight={pokedata.weight} />)
+        })
 
     return (
         <>
             {/* <h1>Pokemones</h1> */}
             <div className='gallery'>
 
-                {
-                    listCard(pokemonsOnView)
-                }
-                {nextPage ? <div><button onClick={() => seeMorePokemones(nextPage)}>see more</button></div> : ""}
+                {listCard(listToRender)}
+
+                {/* {nextPage ? <div><button onClick={() => seeMorePokemones(nextPage)}>see more</button></div> : ""} */}
 
             </div>
         </>
     )
 }
 
-export default Gallery
+export default Gallery;
