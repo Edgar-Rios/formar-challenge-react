@@ -12,7 +12,7 @@ const PokemonProvider = ({ children }) => {
     const [arrDropedIdList, setArrDropedIdList] = useState([]);
     const [page, setPage] = useState(1);
     const [searchText, setSearchText] = useState("");
-    const [typeFilter, setTypeFilter] = useState("");
+    const [typeFilter, setTypeFilter] = useState("name");
 
 
     // ------------------------------------------------------------     MEMO
@@ -37,6 +37,7 @@ const PokemonProvider = ({ children }) => {
 
     function handlerSearcher({ target }) {
         console.log(`${target.value}`)
+        setPage(1);
         setSearchText(`${target.value}`);
     }
 
@@ -54,6 +55,16 @@ const PokemonProvider = ({ children }) => {
         setFilteredPokemones([]);
     }
 
+    const seeMorePokemones = () => {
+        setPage(page + 1);
+    }
+
+    const isMorePages = () => {
+        if (searchText !== '')
+            return listToRender.length > (page * 100)
+        else
+            return allPokemones.length > (page * 100)
+    }
     // ---------------------------------------------------------       EFFECTS
 
     useEffect(() => {
@@ -61,9 +72,27 @@ const PokemonProvider = ({ children }) => {
     }, [])
 
     useEffect(() => {
-        setFilteredPokemones([...allPokemones.filter(pokemon => pokemon.name.toLowerCase().includes(searchText.toLowerCase()))]);
 
-    }, [searchText, allPokemones])
+        let list = [];
+        console.log('efect filter')
+        console.log(`type filter: ${typeFilter}`)
+
+        // eslint-disable-next-line default-case
+        switch (typeFilter) {
+            case 'name':
+                list = [...allPokemones.filter(
+                    pokemon =>
+                        pokemon.name.toLowerCase().includes(searchText.toLowerCase()))]
+                break;
+            case 'skill':
+                list = [...allPokemones.filter(
+                    ({ abilities }) => abilities.some(({ ability }) => ability.name.includes(searchText)))]
+                break;
+        }
+
+        setFilteredPokemones([...list]);
+
+    }, [searchText, allPokemones, typeFilter])
 
 
 
@@ -76,6 +105,8 @@ const PokemonProvider = ({ children }) => {
                 handlerSearcher,
                 dropPokemonById,
                 changeTypeFilter,
+                seeMorePokemones,
+                isMorePages,
             }
         }>
             {children}

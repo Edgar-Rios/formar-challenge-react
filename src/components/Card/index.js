@@ -3,6 +3,7 @@ import React from 'react'
 import './card.css';
 function Card({ image, name, weight, abilities, handleClick, id }) {
 
+    // console.log(abilities)
     return (
         <article className='card-pokemon'>
             <div className='content-image'>
@@ -22,7 +23,7 @@ function Card({ image, name, weight, abilities, handleClick, id }) {
 
                     <fieldset>
                         <legend>abilities</legend>
-                        {/* {abilities.slice(0, 4).map(({ move }, index) => <span key={index}>{(move.name).split('-').join(' ')}</span>)} */}
+                        {abilities.map(({ ability }, index) => <span key={index}>{(ability.name).split('-').join(' ')}</span>)}
                     </fieldset>
 
                 </div>

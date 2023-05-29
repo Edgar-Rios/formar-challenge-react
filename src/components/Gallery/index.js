@@ -6,7 +6,7 @@ import Card from '../Card';
 
 function Gallery() {
 
-    const { listToRender, dropPokemonById } = useContext(PokemonContext);
+    const { listToRender, dropPokemonById, seeMorePokemones, isMorePages } = useContext(PokemonContext);
 
     // console.log('from GALLERY')
     // console.log(listToRender)
@@ -18,14 +18,17 @@ function Gallery() {
                 name: pokemon.name,
                 id: pokemon.id,
                 image: pokemon.sprites.other['official-artwork'].front_default,
-                abilities: pokemon.moves,
+                abilities: pokemon.abilities,
                 weight: pokemon.weight,
             }
-            console.log(pokedata)
+            // console.log(pokedata)
 
             return (
                 <Card key={pokedata.key} id={pokedata.id} handleClick={() => dropPokemonById(pokedata.id)} abilities={pokedata.abilities} name={pokedata.name} image={pokedata.image} weight={pokedata.weight} />)
         })
+
+    // console.log(`pokemons to render? ${listToRender.length}`)
+    // console.log(`is more pages? ${isMorePages()}`)
 
     return (
         <>
@@ -34,7 +37,7 @@ function Gallery() {
 
                 {listCard(listToRender)}
 
-                {/* {nextPage ? <div><button onClick={() => seeMorePokemones(nextPage)}>see more</button></div> : ""} */}
+                {isMorePages() && <div><button onClick={() => seeMorePokemones()}>see more</button></div>}
 
             </div>
         </>
